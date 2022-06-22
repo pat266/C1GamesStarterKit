@@ -1,8 +1,18 @@
 import os
 import subprocess
 import sys
+import contextlib
+
+def supress_stdout(func):
+    def wrapper(*a, **ka):
+        with open(os.devnull, 'w') as devnull:
+            with contextlib.redirect_stdout(devnull):
+                return func(*a, **ka)
+    return wrapper
+
 
 # Runs a single game
+@supress_stdout
 def run_single_game(process_command):
     print("Start run a match")
     p = subprocess.Popen(
